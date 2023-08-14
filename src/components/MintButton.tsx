@@ -43,7 +43,7 @@ export function MintButton({ userAddress, chain }: { userAddress: Address, chain
 
    const { write, data: writeData, error: writeError } = useContractWrite(prepareConfig)
 
-   const { data: transactionData, isError, isLoading, isSuccess, status } = useWaitForTransaction({
+   const { data: transactionData, isError, isLoading, isSuccess, status, error } = useWaitForTransaction({
       hash: writeData?.hash,
    })
 
@@ -85,6 +85,10 @@ export function MintButton({ userAddress, chain }: { userAddress: Address, chain
                   {`${txnHash?.substring(0,6)}...${txnHash?.slice(-6)}`}
                </a>
             </div>
+         }
+         {
+            isError &&
+            <div className="mt-5 text-center bg-red-400 text-red-600 rounded-sm p-3">Transaction Failed: {error?.message}</div>
          }
 
       </div>
