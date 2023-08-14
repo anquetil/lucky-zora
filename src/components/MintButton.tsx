@@ -49,7 +49,7 @@ export function MintButton({ userAddress, chain }: { userAddress: Address, chain
    return(
       <div className="items-center flex flex-col">
          <button
-            className="border-gray-300 border-[1px] px-5 py-4 rounded bg-white shadow text-xl hover:bg-gray-50 active:shadow-sm active:mt-[2px]"
+            className="border-gray-300 border-[1px] px-5 py-4 rounded bg-white shadow text-xl hover:bg-gray-50 active:shadow-sm active:mt-[2px] active:mb-[-2px]"
             disabled={!write}
             onClick={() => write?.()}
          >
@@ -73,10 +73,10 @@ export function MintButton({ userAddress, chain }: { userAddress: Address, chain
                <div className="text-gray-500 italic">{result.description}</div>
                <div></div>
                <br></br>
-               <a className="text-blue-700 underline" href={getZoraLink(chain, mintingContract)}>
+               <a className="text-blue-700 underline" href={getZoraLink(chain, mintingContract)} target="_blank">
                   View on Zora
                </a>
-               <a className="text-blue-700 underline" href={getExplorerLink(chain, txnHash!)}>
+               <a className="text-blue-700 underline" href={getExplorerLink(chain, txnHash!)} target="_blank">
                   {`${txnHash?.substring(0,6)}...${txnHash?.slice(-6)}`}
                </a>
             </div>
