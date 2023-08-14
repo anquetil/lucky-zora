@@ -7,23 +7,24 @@ import { useContractWrite, useWaitForTransaction, usePrepareContractWrite, useCo
 import { getContracts } from '@/utils/getContracts';
 import { LoadingNoggles } from './LoadingNoggles';
 import Image  from 'next/image'
+import { getExplorerLink, getZoraLink } from '@/utils/linkFormatters';
 const referralAddress = '0x6ab075abfA7cdD7B19FA83663b1f2a83e4A957e3'
 var sample = require('lodash/sample');
 
 export function MintButton({ userAddress, chain }: { userAddress: Address, chain: Chain }) {
    const possibleContracts = getContracts()
-   const NFT721Contract = sample(possibleContracts) as Address //random contract
+   const mintingContract = sample(possibleContracts) as Address //random contract
    const { data } = useContractRead({
-      address: NFT721Contract,
+      address: mintingContract,
       abi: erc721DropABI,
       functionName: "contractURI"
    })
 
    const json = atob(data!.substring(29));
-   const result = JSON.parse(json);
+   const result = JSON.parse(json) as { name: string, description: string, seller_fee_basis_points: number, fee_recipient: string, image: string };
 
    const { config: prepareConfig, error: prepareError } = usePrepareContractWrite({
-      address: NFT721Contract,
+      address: mintingContract,
       abi: erc721DropABI,
       functionName: 'mintWithRewards',
       args: [userAddress, BigInt(1), "", referralAddress as `0x${string}`],  
@@ -36,6 +37,7 @@ export function MintButton({ userAddress, chain }: { userAddress: Address, chain
    const { data: transactionData, isError, isLoading, isSuccess, status } = useWaitForTransaction({
       hash: writeData?.hash,
    })
+
 
    const txnHash = transactionData?.transactionHash
    const imageData = result.image as string
@@ -64,12 +66,17 @@ export function MintButton({ userAddress, chain }: { userAddress: Address, chain
             <div className="mt-5 text-center flex flex-col items-center">
                <Image
                   src={imageLink}
-                  width={150}
-                  height={150}
+                  width={200}
+                  height={200}
                   alt="your NFT" />
-               <div>Minted!</div>
+               <div className="mt-2">Minted <b>{result.name}</b>!</div>
+               <div className="text-gray-500 italic">{result.description}</div>
+               <div></div>
                <br></br>
-               <a className="text-blue-700 underline" href={`${chain.blockExplorers?.default.url}/tx/${txnHash}`}>
+               <a className="text-blue-700 underline" href={getZoraLink(chain, mintingContract)}>
+                  View on Zora
+               </a>
+               <a className="text-blue-700 underline" href={getExplorerLink(chain, txnHash!)}>
                   {`${txnHash?.substring(0,6)}...${txnHash?.slice(-6)}`}
                </a>
             </div>
