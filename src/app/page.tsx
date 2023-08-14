@@ -29,7 +29,7 @@ export default function Home() {
 
    
    return (
-      <main className="flex min-h-screen flex-col items-center pt-12 px-6 sm:pt-24 sm:px-0  bg-[fcfcfc]">
+      <main className="flex min-h-screen flex-col items-center pt-12 mx-6 sm:mx-28 sm:pt-24 sm:px-0  bg-[fcfcfc]">
          <div className="text-3xl font-bold mb-12 text-center">MINT A FREE RANDOM ZORA NFT</div>
          {
             (!isConnected) 

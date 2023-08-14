@@ -20,8 +20,17 @@ export function MintButton({ userAddress, chain }: { userAddress: Address, chain
       functionName: "contractURI"
    })
 
-   const json = atob(data!.substring(29));
-   const result = JSON.parse(json) as { name: string, description: string, seller_fee_basis_points: number, fee_recipient: string, image: string };
+   let result = { name: "", description: "", seller_fee_basis_points: 0, fee_recipient: "", image: "" }
+   let imageLink =""
+   if(data){
+      const json = atob(data!.substring(29));
+      result = JSON.parse(json)
+      const imageData = result.image as string
+      imageLink = imageData.includes("ipfs://") ?
+         `https://ipfs.io/ipfs/${imageData.substring(7)}`
+         :
+         imageData
+   }
 
    const { config: prepareConfig, error: prepareError } = usePrepareContractWrite({
       address: mintingContract,
@@ -40,11 +49,7 @@ export function MintButton({ userAddress, chain }: { userAddress: Address, chain
 
 
    const txnHash = transactionData?.transactionHash
-   const imageData = result.image as string
-   const imageLink = imageData.includes("ipfs://") ? 
-      `https://ipfs.io/ipfs/${imageData.substring(7)}`
-      :
-      imageData
+
 
    return(
       <div className="items-center flex flex-col">
