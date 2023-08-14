@@ -1,8 +1,10 @@
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+//import { Inter } from 'next/font/google'
+import { Archivo_Narrow } from 'next/font/google'
+import { Providers } from './providers';
+const mainfont = Archivo_Narrow({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: "I'm Feeling Lucky",
@@ -14,9 +16,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
-  )
+   return (
+      <html lang="en">
+         <body className={mainfont.className}>
+            <Providers>{children}</Providers>
+         </body>
+      </html>
+   );
 }
