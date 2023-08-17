@@ -1,5 +1,10 @@
 import { Address, Chain } from "viem";
 
+export type contractInfo = {
+   address: Address,
+   standard: 'ERC721' | 'ERC1155',
+   token: number
+}
 
 //ALL FOR 721s ONLY
 export function getZoraLink(chain: Chain, contract: Address): string {

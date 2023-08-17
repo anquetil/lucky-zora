@@ -32,14 +32,24 @@ const wagmiConfig = createConfig({
    publicClient
 })
 
+const client = new ApolloClient({
+   uri: 'https://api.goldsky.com/api/public/project_clhk16b61ay9t49vm6ntn4mkz/subgraphs/zora-create-zora-mainnet/stable/gn',
+   cache: new InMemoryCache(),
+})
+
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+
+
 export function Providers({ children }: { children: React.ReactNode }) {
    const [mounted, setMounted] = React.useState(false);
    React.useEffect(() => setMounted(true), []);
    return (
-      <WagmiConfig config={wagmiConfig}>
-         <RainbowKitProvider chains={chains}>
-            {mounted && children}
-         </RainbowKitProvider>
-      </WagmiConfig>
+      <ApolloProvider client={client}>
+         <WagmiConfig config={wagmiConfig}>
+            <RainbowKitProvider chains={chains}>
+               {mounted && children}
+            </RainbowKitProvider>
+         </WagmiConfig>
+      </ApolloProvider>
    );
 }

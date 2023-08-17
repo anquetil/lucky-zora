@@ -1,39 +1,36 @@
 'use client'
 
 import { Address } from 'viem';
-import { useContractRead, Chain } from 'wagmi';
-import { getContracts } from '@/utils/getContracts';
+import { Chain } from 'wagmi';
 import { LoadingNoggles } from './LoadingNoggles';
 import Image  from 'next/image'
-import { getExplorerLink, getZoraLink } from '@/utils/linkFormatters';
-import useMint721 from '@/hooks/useMint721';
-var sample = require('lodash/sample');
-import { erc721DropABI } from "@zoralabs/zora-721-contracts";
+import { contractInfo, getExplorerLink, getZoraLink } from '@/utils/linkFormatters';
+import useMint from '@/hooks/useMint';
+import useGetURI from '@/hooks/useGetURI';
 
-export function MintButton({ userAddress, chain }: { userAddress: Address, chain: Chain }) {
-   const possibleContracts = getContracts()
-   const mintingContract = sample(possibleContracts) as Address //random contract
+export function MintButton({ userAddress, chain, mintingContract }: { userAddress: Address, chain: Chain, mintingContract: contractInfo }) {
+   const {
+      write, 
+      error,
+      transactionData, 
+      isLoading,
+      isSuccess,
+      isError,
+   } = useMint(mintingContract, userAddress)
 
-   const { data } = useContractRead({
-      address: mintingContract,
-      abi: erc721DropABI,
-      functionName: "contractURI"
-   })
+   const {
+      data: dataURI,
+   } = useGetURI(mintingContract)
 
-
-   let result = { name: "", description: "", seller_fee_basis_points: 0, fee_recipient: "", image: "" }
-   let imageLink =""
-   if(data){
-      const json = atob(data!.substring(29));
-      result = JSON.parse(json)
+   if(dataURI) console.log(dataURI)
+   let result = { name: '', description: '', seller_fee_basis_points: 0, fee_recipient: '', image: '' }
+   let imageLink = ''
+   
+   if (dataURI) {
+      result = JSON.parse(atob(dataURI!.substring(29)))
       const imageData = result.image as string
-      imageLink = imageData.includes("ipfs://") ?
-         `https://ipfs.io/ipfs/${imageData.substring(7)}`
-         :
-         imageData
+      imageLink = imageData.includes("ipfs://") ? `https://ipfs.io/ipfs/${imageData.substring(7)}` : imageData
    }
-
-   const {write, transactionData, isLoading, isSuccess, isError, error} = useMint721(mintingContract, userAddress)
 
    const txnHash = transactionData?.transactionHash
 
@@ -65,7 +62,7 @@ export function MintButton({ userAddress, chain }: { userAddress: Address, chain
                <div className="text-gray-500 italic">{result.description}</div>
                <div></div>
                <br></br>
-               <a className="text-blue-700 underline" href={getZoraLink(chain, mintingContract)} target="_blank">
+               <a className="text-blue-700 underline" href={getZoraLink(chain, mintingContract.address)} target="_blank">
                   View on Zora
                </a>
                <a className="text-blue-700 underline" href={getExplorerLink(chain, txnHash!)} target="_blank">

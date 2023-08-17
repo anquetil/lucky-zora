@@ -2,7 +2,12 @@
 
 import { MintButton } from '@/components/MintButton';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useState } from 'react';
+import { Address, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+var sample = require('lodash/sample');
+import { useZoraQuery} from '../hooks/useZoraQuery'
+import type { contractInfo } from '@/utils/linkFormatters';
+import { useQuery, gql } from '@apollo/client';
 
 const chainInfo:Array<{name: string, id: number}> = [
    {
@@ -21,10 +26,23 @@ const chainInfo:Array<{name: string, id: number}> = [
 
 export default function Home() {
    const intendedChain = chainInfo[1] // this sets the require chain
+   const [mintingContract, setMintingContract] = useState<contractInfo>({address: '0x0', standard: 'ERC721', token: -1})
+   
+   const { formattedContractArray } = useZoraQuery(mintingContract.address != '0x0')
+
+   if(formattedContractArray.length > 0 && mintingContract.address == '0x0'){ // setstate
+      let chosenContract = sample(formattedContractArray) as contractInfo
+      while(chosenContract.standard != 'ERC1155'){
+         console.log(chosenContract)
+         chosenContract = sample(formattedContractArray) as contractInfo
+      }
+      console.log(chosenContract)
+      setMintingContract(chosenContract)
+   }
 
    const { isConnected, address } = useAccount()
    const { chain } = useNetwork()
-   const { chains, isLoading: isLoadingNetworkSwitch, pendingChainId, switchNetwork } = useSwitchNetwork()
+   const { switchNetwork } = useSwitchNetwork()
    const correctChain = chain?.id === intendedChain.id
 
    
@@ -34,35 +52,25 @@ export default function Home() {
          {
             (!isConnected) 
             ?
-            (
-               <ConnectButton showBalance={false} accountStatus="avatar" />
-            )
+            (<ConnectButton showBalance={false} accountStatus="avatar" />)
             :
-               (correctChain && address != undefined) 
-               ?
-               (
-                  <MintButton userAddress={address} chain={chain} />
-               )
-               :
-               (
-                  <button 
-                     className="border-yellow-500 rounded-sm border-[1px] p-2 shadow-md bg-yellow-400 hover:bg-yellow-300 ease-in-out transition-all active:mt-[2px] active:mb-[-2px]" 
-                     onClick={() => switchNetwork?.(intendedChain.id)}
-                  >
-                     <div className="text-opacity-75 text-black">
-                        CONNECT TO {intendedChain.name.toUpperCase()}
-                     </div>
-                  </button>
-               )
+            (correctChain && address != undefined) 
+            ?
+            (<MintButton userAddress={address} chain={chain} mintingContract={mintingContract} />)
+            :
+            (
+               <button 
+                  className="border-yellow-500 rounded-sm border-[1px] p-2 shadow-md bg-yellow-400 hover:bg-yellow-300 ease-in-out transition-all active:mt-[2px] active:mb-[-2px]" 
+                  onClick={() => switchNetwork?.(intendedChain.id)}
+               >
+                  <div className="text-opacity-75 text-black">
+                     CONNECT TO {intendedChain.name.toUpperCase()}
+                  </div>
+               </button>
+            )
          }
 
          <div className="mt-48 text-center font-extralight text-md text-gray-400">by <a className="underline" href="https://twitter.com/anquetil" target="_blank">martin</a></div>
-
-
-         <div> 
-            
-         </div>
-
       </main>
    )
 }

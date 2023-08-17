@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.1",
     "@rainbow-me/rainbowkit": "^1.0.8",
     "@types/node": "20.4.9",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "@vercel/analytics": "^1.0.2",
+    "@zoralabs/zora-1155-contracts": "^1.4.0",
     "@zoralabs/zora-721-contracts": "^1.14.1",
     "autoprefixer": "10.4.14",
     "eslint": "8.46.0",

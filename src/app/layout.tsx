@@ -1,4 +1,3 @@
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/react';
@@ -7,6 +6,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { Archivo_Narrow } from 'next/font/google'
 import { Providers } from './providers';
 const mainfont = Archivo_Narrow({ subsets: ['latin'] })
+
 
 export const metadata: Metadata = {
   title: "I'm Feeling Lucky",
