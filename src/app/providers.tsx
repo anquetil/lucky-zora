@@ -39,17 +39,23 @@ const client = new ApolloClient({
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+
+const queryClient = new QueryClient()
+
 
 export function Providers({ children }: { children: React.ReactNode }) {
    const [mounted, setMounted] = React.useState(false);
    React.useEffect(() => setMounted(true), []);
    return (
       <ApolloProvider client={client}>
-         <WagmiConfig config={wagmiConfig}>
-            <RainbowKitProvider chains={chains}>
-               {mounted && children}
-            </RainbowKitProvider>
-         </WagmiConfig>
+         <QueryClientProvider client={queryClient}>
+            <WagmiConfig config={wagmiConfig}>
+               <RainbowKitProvider chains={chains}>
+                  {mounted && children}
+               </RainbowKitProvider>
+            </WagmiConfig>
+         </QueryClientProvider>
       </ApolloProvider>
    );
 }

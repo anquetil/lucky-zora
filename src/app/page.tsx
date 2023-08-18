@@ -32,10 +32,6 @@ export default function Home() {
 
    if(formattedContractArray.length > 0 && mintingContract.address == '0x0'){ // setstate
       let chosenContract = sample(formattedContractArray) as contractInfo
-      while(chosenContract.standard != 'ERC1155'){
-         console.log(chosenContract)
-         chosenContract = sample(formattedContractArray) as contractInfo
-      }
       console.log(chosenContract)
       setMintingContract(chosenContract)
    }

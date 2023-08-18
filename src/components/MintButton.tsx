@@ -19,18 +19,8 @@ export function MintButton({ userAddress, chain, mintingContract }: { userAddres
    } = useMint(mintingContract, userAddress)
 
    const {
-      data: dataURI,
+      metadata,
    } = useGetURI(mintingContract)
-
-   if(dataURI) console.log(dataURI)
-   let result = { name: '', description: '', seller_fee_basis_points: 0, fee_recipient: '', image: '' }
-   let imageLink = ''
-   
-   if (dataURI) {
-      result = JSON.parse(atob(dataURI!.substring(29)))
-      const imageData = result.image as string
-      imageLink = imageData.includes("ipfs://") ? `https://ipfs.io/ipfs/${imageData.substring(7)}` : imageData
-   }
 
    const txnHash = transactionData?.transactionHash
 
@@ -51,15 +41,15 @@ export function MintButton({ userAddress, chain, mintingContract }: { userAddres
                <div className="text-center">Minting in progress</div>
             </div>}
 
-         {isSuccess && 
+         {isSuccess && metadata &&
             <div className="mt-5 text-center flex flex-col items-center">
                <Image
-                  src={imageLink}
+                  src={metadata.image}
                   width={200}
                   height={200}
                   alt="your NFT" />
-               <div className="mt-2">Minted <b>{result.name}</b>!</div>
-               <div className="text-gray-500 italic">{result.description}</div>
+               <div className="mt-2">Minted <b>{metadata.name}</b>!</div>
+               <div className="text-gray-500 italic">{metadata.description}</div>
                <div></div>
                <br></br>
                <a className="text-blue-700 underline" href={getZoraLink(chain, mintingContract.address)} target="_blank">
