@@ -1,7 +1,7 @@
 import { contractInfo } from '@/utils/linkFormatters';
 import { erc721DropABI } from "@zoralabs/zora-721-contracts";
 import { zoraCreator1155ImplABI } from "@zoralabs/zora-1155-contracts";
-import { utils } from "ethers";
+const ethers =require('ethers');
 import { Address, parseEther } from "viem";
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from "wagmi";
 
@@ -9,6 +9,7 @@ const zora_mainnet_1155minter = '0x169d9147dFc9409AfA4E558dF2C9ABeebc020182' // 
 const referralAddress = '0x6ab075abfA7cdD7B19FA83663b1f2a83e4A957e3'
 
 export function useMint(mintingContract: contractInfo, userAddress: Address) {
+   const coder = ethers.AbiCoder.defaultAbiCoder()
 
    const { config: config721 } = usePrepareContractWrite({
       address: mintingContract.address,
@@ -32,7 +33,7 @@ export function useMint(mintingContract: contractInfo, userAddress: Address) {
          zora_mainnet_1155minter,   // IMinter1155 minter
          BigInt(mintingContract.token),                  // uint256 tokenId
          BigInt(1),                                      // uint256 quantity
-         utils.defaultAbiCoder.encode(
+         coder.encode(
             ['address'],
             [userAddress]
          ) as `0x${string}`,                             // bytes calldata minterArguments
