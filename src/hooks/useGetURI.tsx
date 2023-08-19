@@ -30,7 +30,8 @@ export function useGetURI(mintingContract: contractInfo) {
    const { data: ERC1155Data, isLoading: isLoading1155 } = useContractRead({
       address: mintingContract.address,
       abi: zoraCreator1155ImplABI,
-      functionName: "contractURI",
+      functionName: "uri",
+      args: [BigInt(mintingContract.token)],
       enabled: is1155
    })
 
@@ -67,6 +68,8 @@ export function useGetURI(mintingContract: contractInfo) {
          }
       }
    }
+
+   console.log(metadata)
 
    return {
       metadata,
