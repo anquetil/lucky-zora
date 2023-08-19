@@ -5,9 +5,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useState } from 'react';
 import { Address, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 var sample = require('lodash/sample');
-import { useZoraQuery} from '../hooks/useZoraQuery'
 import type { contractInfo } from '@/utils/linkFormatters';
-import { useQuery, gql } from '@apollo/client';
+import useZoraQuery from '@/hooks/useZoraQuery';
 
 const chainInfo:Array<{name: string, id: number}> = [
    {
@@ -32,7 +31,6 @@ export default function Home() {
 
    if(formattedContractArray.length > 0 && mintingContract.address == '0x0'){ // setstate
       let chosenContract = sample(formattedContractArray) as contractInfo
-      console.log(chosenContract)
       setMintingContract(chosenContract)
    }
 
