@@ -64,7 +64,7 @@ export default function Home() {
             )
          }
 
-         <div className="mt-48 text-center font-extralight text-md text-gray-400">by <a className="underline" href="https://twitter.com/anquetil" target="_blank">martin</a></div>
+         <div className="mt-48 text-center font-extralight text-md text-gray-400">by <a className="underline hover:text-gray-500" href="https://twitter.com/anquetil" target="_blank">martin</a></div>
       </main>
    )
 }

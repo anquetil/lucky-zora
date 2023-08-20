@@ -52,10 +52,10 @@ export function MintButton({ userAddress, chain, mintingContract }: { userAddres
                <div className="text-gray-500 italic">{metadata.description}</div>
                <div></div>
                <br></br>
-               <a className="text-blue-700 underline" href={getZoraLink(chain, mintingContract.address)} target="_blank">
+               <a className="text-blue-500 hover:text-blue-700 underline" href={getZoraLink(chain, mintingContract.address)} target="_blank">
                   View on Zora
                </a>
-               <a className="text-blue-700 underline" href={getExplorerLink(chain, txnHash!)} target="_blank">
+               <a className="text-blue-500 hover:text-blue-700 underline" href={getExplorerLink(chain, txnHash!)} target="_blank">
                   {`${txnHash?.substring(0,6)}...${txnHash?.slice(-6)}`}
                </a>
             </div>
